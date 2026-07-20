@@ -44,8 +44,11 @@ M3U_DIR = os.path.join(BASE_DIR, '组播ID')
 # Token 验证配置（远程 token 文件 URL）
 REMOTE_TOKEN_URL = os.environ.get('REMOTE_TOKEN_URL', 'https://nav.sdyun.eu.org/token/ip_token.txt')
 
-# 从 config.ini 的 [Settings] 段读取配置密码，默认 admin
+# 配置页面密码：优先取环境变量，否则从 config.ini 读取
 def _get_config_password():
+    env_pwd = os.environ.get('CONFIG_PASSWORD', '')
+    if env_pwd:
+        return env_pwd
     try:
         cfg = configparser.ConfigParser()
         cfg.read(CONFIG_FILE, encoding='utf-8')
@@ -56,9 +59,7 @@ def _get_config_password():
 CONFIG_PASSWORD = _get_config_password()
 
 # Flask session 密钥
-SECRET_KEY = os.environ.get('SECRET_KEY', '') or os.urandom(24).hex()
-if not os.environ.get('SECRET_KEY'):
-    print('[warn] 未设置 SECRET_KEY 环境变量，使用随机密钥（每次重启后 session 会失效）')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'iptv-proxy-secret-key')
 app.secret_key = SECRET_KEY
 
 AUTH_FLAG_FILE = os.path.join(DATA_DIR, 'auth_verified.txt')       # 服务器认证标志：存在即已认证
@@ -1454,8 +1455,4 @@ if __name__ == '__main__':
         scanner_thread.start()
         print('[scanner] 后台扫描线程已启动')
 
-    # 生产环境禁止开启 debug，开发时可通过环境变量 DEBUG=1 启用
-    debug_mode = os.environ.get('DEBUG', '0') == '1'
-    if debug_mode:
-        print('[warn] DEBUG 模式已开启，仅用于开发环境！')
-    app.run(host='0.0.0.0', port=6603, debug=debug_mode, threaded=True)
+    app.run(host='0.0.0.0', port=6603, debug=True, threaded=True)

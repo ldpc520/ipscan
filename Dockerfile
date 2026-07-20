@@ -32,8 +32,6 @@ EXPOSE 6603
 # 环境变量（可在运行时覆盖）
 ENV ENABLE_SCANNER=1
 ENV SCAN_INTERVAL=900
-ENV SECRET_KEY=""
-ENV REMOTE_TOKEN_URL="https://nav.sdyun.eu.org/token/ip_token.txt"
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \

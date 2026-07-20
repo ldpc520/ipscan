@@ -8,11 +8,11 @@ services:
     ports:
       - "6603:6603"
     environment:
-      - SECRET_KEY=你的随机安全密钥         # 必改，随便设一串字符
-      - ENABLE_SCANNER=1                    # 启用后台扫描
-      - SCAN_INTERVAL=900                   # 扫描间隔（秒），15分钟
-      - REMOTE_TOKEN_URL=https://nav.sdyun.eu.org/token/ip_token.txt
+      # - REMOTE_TOKEN_URL=https://nav.sdyun.eu.org/token/ip_token.txt  # 可选，代码已有默认值
+      - CONFIG_PASSWORD=admin                      # 面板密码
+      - ENABLE_SCANNER=1
+      - SCAN_INTERVAL=900
     volumes:
-      - ./data:/app/data                    # 持久化数据
-      - ./config.ini:/app/config.ini        # 挂载配置文件
-      - ./组播ID:/app/组播ID                  # 频道数据
+      - ./data:/app/data
+      - ./config.ini:/app/config.ini
+      - ./组播ID:/app/组播ID
