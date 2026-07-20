@@ -2,7 +2,8 @@ version: "3.8"
 
 services:
   ipscan:
-    image: ghcr.io/ldpc520/ipscan:latest
+    image: ghcr.io/ldpc520/ipscan:latest       # 远程镜像（从GHCR拉取）
+    build: .                                     # 本地构建备选
     container_name: ipscan
     restart: unless-stopped
     ports:

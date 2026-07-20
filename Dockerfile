@@ -23,6 +23,9 @@ COPY --chown=appuser:appuser . .
 # 创建数据目录并设置权限
 RUN mkdir -p /app/data && chown -R appuser:appuser /app
 
+# entrypoint 脚本需要可执行权限
+RUN chmod +x /app/entrypoint.sh
+
 # 切换到非 root 用户
 USER appuser
 
@@ -36,6 +39,9 @@ ENV SCAN_INTERVAL=900
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:6603/health')" || exit 1
+
+# 入口脚本：自动生成 config.ini
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 # 启动命令：优先使用 gunicorn 生产模式，失败则回退到 Flask 开发服务器
 CMD ["sh", "-c", "\
