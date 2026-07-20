@@ -1,18 +1,26 @@
 #!/bin/sh
 set -e
 
-CONFIG_PATH=/app/config.ini
+# 确保 data 目录存在
+mkdir -p /app/data
 
-# 如果 config.ini 是目录（Docker 挂载空目录导致），删除后重建文件
-if [ -d "$CONFIG_PATH" ]; then
-    echo "[info] config.ini 是目录，删除后自动生成文件..."
-    rm -rf "$CONFIG_PATH"
+CONFIG_IN_DATA=/app/data/config.ini
+CONFIG_LINK=/app/config.ini
+
+# 如果 config.ini 是一个目录（Docker 挂载空目录导致），先删除
+if [ -d "$CONFIG_LINK" ]; then
+    echo "[info] 删除挂载导致的目录..."
+    rmdir "$CONFIG_LINK" 2>/dev/null || rm -rf "$CONFIG_LINK" 2>/dev/null || true
+fi
+# 如果是挂载的文件但不是我们需要的，也删除
+if [ -f "$CONFIG_LINK" ] && [ ! -L "$CONFIG_LINK" ]; then
+    rm -f "$CONFIG_LINK"
 fi
 
-# 如果 config.ini 不存在，自动生成示例文件
-if [ ! -f "$CONFIG_PATH" ]; then
-    echo "[info] config.ini 不存在，自动生成示例文件..."
-    cat > "$CONFIG_PATH" << 'EOF'
+# 如果 data 里没有 config.ini，自动生成
+if [ ! -f "$CONFIG_IN_DATA" ]; then
+    echo "[info] 自动生成 config.ini 到 data 目录..."
+    cat > "$CONFIG_IN_DATA" << 'EOF'
 [Settings]
 config_password = admin
 
@@ -38,8 +46,11 @@ enabled = yes
 EOF
 fi
 
-# 确保 data 目录存在
-mkdir -p /app/data
+# 创建软链接，让 app.py 能读到 /app/config.ini
+if [ ! -L "$CONFIG_LINK" ] && [ ! -f "$CONFIG_LINK" ]; then
+    ln -s "$CONFIG_IN_DATA" "$CONFIG_LINK"
+    echo "[info] 已链接 config.ini"
+fi
 
 # 执行传入的命令
 exec "$@"
