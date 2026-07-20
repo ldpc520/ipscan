@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  ipscan:
+    image: ghcr.io/ldpc520/ipscan:latest
+    container_name: ipscan
+    restart: unless-stopped
+    ports:
+      - "6603:6603"
+    environment:
+      - SECRET_KEY=你的随机安全密钥         # 必改，随便设一串字符
+      - ENABLE_SCANNER=1                    # 启用后台扫描
+      - SCAN_INTERVAL=900                   # 扫描间隔（秒），15分钟
+      - REMOTE_TOKEN_URL=https://nav.sdyun.eu.org/token/ip_token.txt
+    volumes:
+      - ./data:/app/data                    # 持久化数据
+      - ./config.ini:/app/config.ini        # 挂载配置文件
+      - ./组播ID:/app/组播ID                  # 频道数据
