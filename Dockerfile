@@ -43,8 +43,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
 # 入口脚本：自动生成 config.ini
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-# 启动命令：优先使用 gunicorn 生产模式，失败则回退到 Flask 开发服务器
-CMD ["sh", "-c", "\
-    pip install gunicorn -q 2>/dev/null && \
-    exec gunicorn --bind 0.0.0.0:6603 --workers 2 --threads 4 --timeout 120 app:app \
-    || exec python app.py"]
+# 启动命令
+CMD ["python", "app.py"]
