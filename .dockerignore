@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# 虚拟环境
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# 运行时数据（不打包进镜像）
+data/
+scanner.log
+*.pid
+fail_count.ini
+history_ip.txt
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# GitHub
+.github/
+
+# 其他
+*.md
+README*
+LICENSE
+.DS_Store
+Thumbs.db

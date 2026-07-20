@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# 运行时文件（不提交）
+data/
+scanner.log
+*.pid
+config.ini
+fail_count.ini
+history_ip.txt
+udp_ip_*.txt
+hls_ip_*.txt
+
+# IDE
+.vscode/
+.idea/
+
+# 系统
+.DS_Store
+Thumbs.db
